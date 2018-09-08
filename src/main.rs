@@ -69,7 +69,7 @@ fn render(pixels: &mut [u8],
     assert!(pixels.len() == bounds.0 * bounds.1);
 
     for row in 0..bounds.1 {
-        for column in 0..bounds.1 {
+        for column in 0..bounds.0 {
             let point = pixel_to_point(bounds,
                                        (column, row),
                                        uper_left, lower_right

@@ -6,6 +6,7 @@ use std::str::FromStr;
 use image::ColorType;
 use image::png::PNGEncoder;
 use std::fs::File;
+use std::io::Write;
 use std::io::Result;
 
 fn escape_time(c :Complex<f64>, limit: u32) -> Option<u32> {
@@ -91,4 +92,27 @@ fn write_image(filename: &str, pixels: &[u8], bounds: (usize, usize)) -> Result<
     encoder.encode(&pixels, bounds.0 as u32, bounds.1 as u32, ColorType::Gray(8))?;
 
     Ok(())
+}
+
+fn main() {
+    let args: Vec<String> = std::env::args().collect();
+
+    if args.len() != 5 {
+        writeln!(std::io::stderr(), "Usage: mandelbrot FILE PIXELS UPPERLEFT LOWERRIGHT").unwrap();
+        std::process::exit(1);
+    }
+
+    let bounds = parse_paier(&args[2], 'x')
+        .expect("error parsing image dimensions");
+    let uper_left = parse_to_complex(&args[3])
+        .expect("error parsing upper left conrner point");
+    let lower_right = parse_to_complex(&args[4])
+        .expect("error parsing lower right conrner point");
+
+    let mut pixels = vec![0; bounds.0 * bounds.1];
+
+    render(&mut pixels, bounds, uper_left, lower_right);
+
+    write_image(&args[1], &pixels, bounds)
+        .expect("error writing PNG file");
 }

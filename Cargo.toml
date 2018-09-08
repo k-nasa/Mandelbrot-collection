@@ -4,3 +4,5 @@ version = "0.1.0"
 authors = ["k-nasa <htilcs1115@gmail.com>"]
 
 [dependencies]
+num = "0.1.27"
+image = "0.13.0"
